@@ -47,7 +47,7 @@
 
 - [x] 1. Инициализация проекта
 - [x] 2. Зависимости
-- [ ] 3. Room (Entity, Dao, Database)
+- [x] 3. Room (Entity, Dao, Database)
 - [ ] 4. Retrofit (DTO, ApiService, NetworkModule)
 - [ ] 5. Repository (интерфейс, реализация)
 - [ ] 6. ViewModel + RxJava
@@ -58,19 +58,19 @@
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 2 / 12
+**Прогресс:** 3 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 3 — Room (Entity, Dao, Database)**
+**Этап 4 — Retrofit (DTO, ApiService, NetworkModule)**
 
 Планирую:
-- `TaskEntity` — таблица `tasks`
-- `TaskDao` — методы на RxJava3 (`Flowable`, `Single`, `Completable`)
-- `TodoDatabase` — база с миграциями
-- `DatabaseModule` (Hilt) — предоставляет `TodoDatabase` и `TaskDao`
+- `TaskDto` — модель для JSON
+- `TodoApiService` — эндпоинты (`GET`, `POST`, `PUT`, `DELETE`)
+- `NetworkModule` (Hilt) — Retrofit + OkHttp + Gson + RxJava3 adapter
+- Мапперы между `TaskDto` и `TaskEntity`
 
 ---
 
@@ -81,6 +81,9 @@
 
 ### Этап 2. Зависимости ✅
 Подключены Room, Retrofit, RxJava 3, Hilt, Navigation Component. Включён ViewBinding. Создан класс `TodoApp` с `@HiltAndroidApp`.
+
+### Этап 3. Room ✅
+Созданы `TaskEntity` (8 полей), `TaskDao` (RxJava3: `Flowable`, `Single`, `Completable`), `TodoDatabase`, `DatabaseModule` (Hilt). Приложение успешно запускается.
 
 ---
 
