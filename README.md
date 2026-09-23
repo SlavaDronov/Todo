@@ -36,7 +36,7 @@
 - **Сеть:** Retrofit + OkHttp + Gson + RxJava3 adapter
 - **Асинхронность:** RxJava 3 + RxAndroid
 - **DI:** Hilt
-- **Уведомления:** NotificationManager, AlarmManager, `POST_NOTIFICATIONS`
+- **Уведомления:** NotificationManager, AlarmManager (точные будильники), `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`
 - **Тема:** `AppCompatDelegate` + `values-night` + DataStore
 
 **Бэкенд:** mock-сервер на [MockAPI.io](https://mockapi.io).
@@ -48,7 +48,7 @@
 - [x] 1. Инициализация проекта
 - [x] 2. Зависимости
 - [x] 3. Room (Entity, Dao, Database)
-- [ ] 4. Retrofit (DTO, ApiService, NetworkModule)
+- [x] 4. Retrofit (DTO, ApiService, NetworkModule)
 - [ ] 5. Repository (интерфейс, реализация)
 - [ ] 6. ViewModel + RxJava
 - [ ] 7. UI на XML (список, детали, редактирование)
@@ -58,19 +58,19 @@
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 3 / 12
+**Прогресс:** 4 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 4 — Retrofit (DTO, ApiService, NetworkModule)**
+**Этап 5 — Repository (интерфейс, реализация)**
 
 Планирую:
-- `TaskDto` — модель для JSON
-- `TodoApiService` — эндпоинты (`GET`, `POST`, `PUT`, `DELETE`)
-- `NetworkModule` (Hilt) — Retrofit + OkHttp + Gson + RxJava3 adapter
-- Мапперы между `TaskDto` и `TaskEntity`
+- `TaskRepository` — интерфейс в `domain/`
+- `TaskRepositoryImpl` — реализация в `data/`
+- Связка Room + Retrofit через RxJava
+- `RepositoryModule` (Hilt) для биндинга
 
 ---
 
@@ -83,7 +83,10 @@
 Подключены Room, Retrofit, RxJava 3, Hilt, Navigation Component. Включён ViewBinding. Создан класс `TodoApp` с `@HiltAndroidApp`.
 
 ### Этап 3. Room ✅
-Созданы `TaskEntity` (8 полей), `TaskDao` (RxJava3: `Flowable`, `Single`, `Completable`), `TodoDatabase`, `DatabaseModule` (Hilt). Приложение успешно запускается.
+Созданы `TaskEntity` (8 полей), `TaskDao` (RxJava3: `Flowable`, `Single`, `Completable`), `TodoDatabase`, `DatabaseModule` (Hilt).
+
+### Этап 4. Retrofit ✅
+Созданы `ApiConstants`, `TaskDto`, `TodoApiService` (5 эндпоинтов на RxJava3), `NetworkModule` (Retrofit + OkHttp + Gson + RxJava3 + Hilt), `TaskMapper`. Проверено: `GET /tasks` возвращает данные с MockAPI.
 
 ---
 
