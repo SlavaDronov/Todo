@@ -46,7 +46,7 @@
 ## 🗺️ План работы
 
 - [x] 1. Инициализация проекта
-- [ ] 2. Зависимости
+- [x] 2. Зависимости
 - [ ] 3. Room (Entity, Dao, Database)
 - [ ] 4. Retrofit (DTO, ApiService, NetworkModule)
 - [ ] 5. Repository (интерфейс, реализация)
@@ -58,35 +58,29 @@
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 1 / 12
+**Прогресс:** 2 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 2 — Зависимости**
+**Этап 3 — Room (Entity, Dao, Database)**
 
-Добавляю в `build.gradle.kts`:
-- Room (runtime, ktx, rxjava3, compiler)
-- Retrofit + RxJava3 adapter + Gson
-- RxJava 3 + RxAndroid
-- Hilt (android, compiler)
-- Navigation Component
-- ViewBinding включён
+Планирую:
+- `TaskEntity` — таблица `tasks`
+- `TaskDao` — методы на RxJava3 (`Flowable`, `Single`, `Completable`)
+- `TodoDatabase` — база с миграциями
+- `DatabaseModule` (Hilt) — предоставляет `TodoDatabase` и `TaskDao`
 
 ---
 
 ## ✅ Что сделано
 
 ### Этап 1. Инициализация ✅
+Создан проект Todo в Android Studio, настроен `.gitignore`, инициализирован Git-репозиторий, добавлен README.
 
-- Создан проект Todo в Android Studio
-- Настроен `.gitignore` (`.idea`, `local.properties`, `build`)
-- Инициализирован Git-репозиторий
-- Добавлен README
-
-**Коммит:** `c45e02a — Init: create Android project Todo`
-**Дата:** 23.09.2026
+### Этап 2. Зависимости ✅
+Подключены Room, Retrofit, RxJava 3, Hilt, Navigation Component. Включён ViewBinding. Создан класс `TodoApp` с `@HiltAndroidApp`.
 
 ---
 
