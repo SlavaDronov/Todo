@@ -50,7 +50,7 @@
 - [x] 3. Room (Entity, Dao, Database)
 - [x] 4. Retrofit (DTO, ApiService, NetworkModule)
 - [x] 5. Repository (интерфейс, реализация)
-- [ ] 6. ViewModel + RxJava
+- [x] 6. ViewModel + RxJava
 - [ ] 7. UI на XML (список, детали, редактирование)
 - [ ] 8. Навигация
 - [ ] 9. Уведомления
@@ -58,20 +58,19 @@
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 5 / 12
+**Прогресс:** 6 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 6 — ViewModel + RxJava**
+**Этап 7 — UI на XML (список задач)**
 
 Планирую:
-- `TaskListViewModel` — список задач с сортировкой
-- `TaskDetailsViewModel` — одна задача по ID
-- `TaskEditViewModel` — создание / редактирование
-- `CompositeDisposable` для управления подписками
-- `refreshFromNetwork()` при старте
+- `item_task.xml` — карточка задачи в списке
+- `fragment_task_list.xml` — экран списка с RecyclerView, поиском, меню сортировки
+- `TaskListAdapter.kt` — RecyclerView.Adapter с ViewBinding
+- `TaskListFragment.kt` — Fragment с `@AndroidEntryPoint`, подписка на LiveData
 
 ---
 
@@ -91,6 +90,9 @@
 
 ### Этап 5. Repository ✅
 Созданы `TaskRepository` (интерфейс), `TaskRepositoryImpl` (Room + Retrofit через RxJava), `RepositoryModule` (Hilt `@Binds`).
+
+### Этап 6. ViewModel + RxJava ✅
+Созданы `SortMode` (enum), `TaskListViewModel` (`@HiltViewModel`, LiveData, BehaviorSubject, switchMap, CompositeDisposable).
 
 ---
 
