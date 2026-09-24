@@ -51,26 +51,27 @@
 - [x] 4. Retrofit (DTO, ApiService, NetworkModule)
 - [x] 5. Repository (интерфейс, реализация)
 - [x] 6. ViewModel + RxJava
-- [ ] 7. UI на XML (список, детали, редактирование)
-- [ ] 8. Навигация
+- [x] 7. UI на XML (список задач)
+- [ ] 8. Навигация (детали, редактирование)
 - [ ] 9. Уведомления
 - [ ] 10. Тёмная тема
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 6 / 12
+**Прогресс:** 7 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 7 — UI на XML (список задач)**
+**Этап 8 — Навигация**
 
 Планирую:
-- `item_task.xml` — карточка задачи в списке
-- `fragment_task_list.xml` — экран списка с RecyclerView, поиском, меню сортировки
-- `TaskListAdapter.kt` — RecyclerView.Adapter с ViewBinding
-- `TaskListFragment.kt` — Fragment с `@AndroidEntryPoint`, подписка на LiveData
+- `nav_graph.xml` — граф навигации
+- `TaskDetailsFragment` + `TaskDetailsViewModel`
+- `TaskEditFragment` + `TaskEditViewModel`
+- Переходы: список → детали → редактирование
+- Передача `taskId` через `Bundle`
 
 ---
 
@@ -83,16 +84,19 @@
 Подключены Room, Retrofit, RxJava 3, Hilt, Navigation Component. Включён ViewBinding. Создан класс `TodoApp` с `@HiltAndroidApp`.
 
 ### Этап 3. Room ✅
-Созданы `TaskEntity` (8 полей), `TaskDao` (RxJava3: `Flowable`, `Single`, `Completable`), `TodoDatabase`, `DatabaseModule` (Hilt).
+Созданы `TaskEntity`, `TaskDao` (RxJava3), `TodoDatabase`, `DatabaseModule` (Hilt).
 
 ### Этап 4. Retrofit ✅
-Созданы `ApiConstants`, `TaskDto`, `TodoApiService` (5 эндпоинтов на RxJava3), `NetworkModule` (Retrofit + OkHttp + Gson + RxJava3 + Hilt), `TaskMapper`.
+Созданы `ApiConstants`, `TaskDto`, `TodoApiService`, `NetworkModule`, `TaskMapper`.
 
 ### Этап 5. Repository ✅
-Созданы `TaskRepository` (интерфейс), `TaskRepositoryImpl` (Room + Retrofit через RxJava), `RepositoryModule` (Hilt `@Binds`).
+Созданы `TaskRepository` (интерфейс), `TaskRepositoryImpl`, `RepositoryModule`.
 
 ### Этап 6. ViewModel + RxJava ✅
-Созданы `SortMode` (enum), `TaskListViewModel` (`@HiltViewModel`, LiveData, BehaviorSubject, switchMap, CompositeDisposable).
+Созданы `SortMode`, `TaskListViewModel` (`@HiltViewModel`, LiveData, BehaviorSubject, switchMap).
+
+### Этап 7. UI на XML ✅
+Созданы `item_task.xml`, `fragment_task_list.xml`, `TaskListAdapter`, `TaskListFragment`. Синхронизация с MockAPI без дубликатов (upsert по `remoteId`).
 
 ---
 

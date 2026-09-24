@@ -7,7 +7,7 @@ import com.dron.todo.data.local.entity.TaskEntity
 
 @Database(
     entities = [TaskEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class TodoDatabase : RoomDatabase() {

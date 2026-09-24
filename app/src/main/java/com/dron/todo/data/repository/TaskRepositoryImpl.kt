@@ -39,7 +39,26 @@ class TaskRepositoryImpl @Inject constructor(
         apiService.getTasks()
             .subscribeOn(Schedulers.io())
             .flatMapCompletable { dtos ->
-                taskDao.insertAll(dtos.toEntities())
+                Completable.fromAction {
+                    dtos.forEach { dto ->
+                        val remoteId = dto.id?.toLongOrNull() ?: return@forEach
+                        val existing = taskDao.getByRemoteId(remoteId)
+
+                        val entity = if (existing != null) {
+                            existing.copy(
+                                title = dto.title,
+                                description = dto.description,
+                                priority = dto.priority,
+                                dueDate = dto.dueDate,
+                                completed = dto.completed
+                            )
+                        } else {
+                            dto.toEntity()
+                        }
+
+                        taskDao.insertBlocking(entity)   // ← синхронный
+                    }
+                }
             }
 
     // ---------- Изменения (Room + сеть) ----------

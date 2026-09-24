@@ -28,6 +28,9 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE id = :id")
     fun getById(id: Long): Single<TaskEntity>
 
+    @Query("SELECT * FROM tasks WHERE remoteId = :remoteId LIMIT 1")
+    fun getByRemoteId(remoteId: Long): TaskEntity?
+
     @Query(
         """
         SELECT * FROM tasks
@@ -44,6 +47,9 @@ interface TaskDao {
     fun insert(task: TaskEntity): Single<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertBlocking(task: TaskEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(tasks: List<TaskEntity>): Completable
 
     @Update
@@ -57,4 +63,5 @@ interface TaskDao {
 
     @Query("UPDATE tasks SET completed = :completed WHERE id = :id")
     fun updateCompleted(id: Long, completed: Boolean): Completable
+
 }

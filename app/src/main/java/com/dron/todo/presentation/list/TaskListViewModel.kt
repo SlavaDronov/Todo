@@ -53,6 +53,28 @@ class TaskListViewModel @Inject constructor(
         }
     }
 
+    fun delete(task: TaskEntity) {
+        disposable.add(
+            repository.delete(task)
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    { Log.d(TAG, "Задача удалена: ${task.id}") },
+                    { error -> Log.e(TAG, "Ошибка удаления: ${error.message}") }
+                )
+        )
+    }
+
+    fun toggleCompleted(id: Long, completed: Boolean) {
+        disposable.add(
+            repository.toggleCompleted(id, completed)
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    { Log.d(TAG, "Статус обновлён: $id → $completed") },
+                    { error -> Log.e(TAG, "Ошибка обновления: ${error.message}") }
+                )
+        )
+    }
+
     override fun onCleared() {
         disposable.clear()
         super.onCleared()
