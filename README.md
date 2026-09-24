@@ -49,7 +49,7 @@
 - [x] 2. Зависимости
 - [x] 3. Room (Entity, Dao, Database)
 - [x] 4. Retrofit (DTO, ApiService, NetworkModule)
-- [ ] 5. Repository (интерфейс, реализация)
+- [x] 5. Repository (интерфейс, реализация)
 - [ ] 6. ViewModel + RxJava
 - [ ] 7. UI на XML (список, детали, редактирование)
 - [ ] 8. Навигация
@@ -58,19 +58,20 @@
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 4 / 12
+**Прогресс:** 5 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 5 — Repository (интерфейс, реализация)**
+**Этап 6 — ViewModel + RxJava**
 
 Планирую:
-- `TaskRepository` — интерфейс в `domain/`
-- `TaskRepositoryImpl` — реализация в `data/`
-- Связка Room + Retrofit через RxJava
-- `RepositoryModule` (Hilt) для биндинга
+- `TaskListViewModel` — список задач с сортировкой
+- `TaskDetailsViewModel` — одна задача по ID
+- `TaskEditViewModel` — создание / редактирование
+- `CompositeDisposable` для управления подписками
+- `refreshFromNetwork()` при старте
 
 ---
 
@@ -86,7 +87,10 @@
 Созданы `TaskEntity` (8 полей), `TaskDao` (RxJava3: `Flowable`, `Single`, `Completable`), `TodoDatabase`, `DatabaseModule` (Hilt).
 
 ### Этап 4. Retrofit ✅
-Созданы `ApiConstants`, `TaskDto`, `TodoApiService` (5 эндпоинтов на RxJava3), `NetworkModule` (Retrofit + OkHttp + Gson + RxJava3 + Hilt), `TaskMapper`. Проверено: `GET /tasks` возвращает данные с MockAPI.
+Созданы `ApiConstants`, `TaskDto`, `TodoApiService` (5 эндпоинтов на RxJava3), `NetworkModule` (Retrofit + OkHttp + Gson + RxJava3 + Hilt), `TaskMapper`.
+
+### Этап 5. Repository ✅
+Созданы `TaskRepository` (интерфейс), `TaskRepositoryImpl` (Room + Retrofit через RxJava), `RepositoryModule` (Hilt `@Binds`).
 
 ---
 
