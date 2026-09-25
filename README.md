@@ -38,6 +38,7 @@
 - **DI:** Hilt
 - **Уведомления:** NotificationManager, AlarmManager (точные будильники), `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`
 - **Тема:** `AppCompatDelegate` + `values-night` + DataStore
+- **Дата и время:** `MaterialDatePicker` + `MaterialTimePicker`, формат `dd.MM.yyyy HH:mm`
 
 **Бэкенд:** mock-сервер на [MockAPI.io](https://mockapi.io).
 
@@ -67,8 +68,8 @@
 **Этап 10 — Тёмная тема**
 
 Планирую:
+- `ThemePreferences` (DataStore) — сохранение выбора
 - `ThemeManager` — переключение через `AppCompatDelegate`
-- `DataStore` — сохранение выбора пользователя
 - Кнопка в Toolbar (светлая / тёмная / системная)
 - Проверка `values-night/themes.xml`
 
@@ -101,7 +102,14 @@
 Созданы `nav_graph.xml`, `TaskDetailsFragment` + ViewModel, `TaskEditFragment` + ViewModel. Safe Args. Toolbar с навигацией.
 
 ### Этап 9. Уведомления ✅
-Созданы `NotificationHelper` (канал + показ), `AlarmReceiver` (`BroadcastReceiver`), `AlarmScheduler` (`AlarmManager` с `setExactAndAllowWhileIdle`), `PermissionHelper`. Запрос разрешений `POST_NOTIFICATIONS` и `SCHEDULE_EXACT_ALARM`. Будильники за 15 минут до дедлайна. **Проверено — уведомления приходят.**
+- `NotificationHelper` — канал + показ уведомлений
+- `AlarmReceiver` — `BroadcastReceiver` для срабатывания
+- `AlarmScheduler` — `AlarmManager` с `setExactAndAllowWhileIdle` (за 15 минут до дедлайна)
+- `PermissionHelper` — запрос `SCHEDULE_EXACT_ALARM`
+- Разрешения `POST_NOTIFICATIONS` (Android 13+) и `SCHEDULE_EXACT_ALARM` (Android 12+)
+- `DateTimeUtils` + `MaterialDatePicker` + `MaterialTimePicker` — удобный ввод даты и времени
+
+**Проверено:** уведомления приходят за 15 минут до дедлайна.
 
 ---
 
