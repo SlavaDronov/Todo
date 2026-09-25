@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/taskListFragment">
+
+    <fragment
+        android:id="@+id/taskListFragment"
+        android:name="com.dron.todo.presentation.list.TaskListFragment"
+        android:label="Задачи"
+        tools:layout="@layout/fragment_task_list">
+
+        <action
+            android:id="@+id/action_list_to_details"
+            app:destination="@id/taskDetailsFragment" />
+
+        <action
+            android:id="@+id/action_list_to_edit"
+            app:destination="@id/taskEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/taskDetailsFragment"
+        android:name="com.dron.todo.presentation.details.TaskDetailsFragment"
+        android:label="Детали задачи"
+        tools:layout="@layout/fragment_task_details">
+
+        <argument
+            android:name="taskId"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_details_to_edit"
+            app:destination="@id/taskEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/taskEditFragment"
+        android:name="com.dron.todo.presentation.edit.TaskEditFragment"
+        android:label="Редактирование"
+        tools:layout="@layout/fragment_task_edit">
+
+        <argument
+            android:name="taskId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+
+</navigation>

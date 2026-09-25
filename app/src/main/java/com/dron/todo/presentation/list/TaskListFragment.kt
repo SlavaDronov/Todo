@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,8 +44,9 @@ class TaskListFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = TaskListAdapter(
             onTaskClick = { task ->
-                Toast.makeText(requireContext(), task.title, Toast.LENGTH_SHORT).show()
-                // TODO: навигация на экран деталей — на этапе 8
+                val action = TaskListFragmentDirections
+                    .actionListToDetails(task.id)
+                findNavController().navigate(action)
             },
             onCompletedToggle = { task, isChecked ->
                 viewModel.toggleCompleted(task.id, isChecked)
@@ -83,8 +85,9 @@ class TaskListFragment : Fragment() {
 
     private fun setupFab() {
         binding.addTaskFab.setOnClickListener {
-            Toast.makeText(requireContext(), "Создание задачи — скоро", Toast.LENGTH_SHORT).show()
-            // TODO: навигация на экран создания — на этапе 8
+            val action = TaskListFragmentDirections
+                .actionListToEdit(-1L)   // -1 = создание
+            findNavController().navigate(action)
         }
     }
 

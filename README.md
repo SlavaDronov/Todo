@@ -52,26 +52,26 @@
 - [x] 5. Repository (интерфейс, реализация)
 - [x] 6. ViewModel + RxJava
 - [x] 7. UI на XML (список задач)
-- [ ] 8. Навигация (детали, редактирование)
+- [x] 8. Навигация (детали, редактирование)
 - [ ] 9. Уведомления
 - [ ] 10. Тёмная тема
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 7 / 12
+**Прогресс:** 8 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 8 — Навигация**
+**Этап 9 — Уведомления**
 
 Планирую:
-- `nav_graph.xml` — граф навигации
-- `TaskDetailsFragment` + `TaskDetailsViewModel`
-- `TaskEditFragment` + `TaskEditViewModel`
-- Переходы: список → детали → редактирование
-- Передача `taskId` через `Bundle`
+- `NotificationHelper` — создание канала, показ уведомлений
+- `AlarmScheduler` — точные будильники через `AlarmManager`
+- `AlarmReceiver` — `BroadcastReceiver` для срабатывания
+- Разрешения `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`
+- Запрос разрешений у пользователя
 
 ---
 
@@ -97,6 +97,9 @@
 
 ### Этап 7. UI на XML ✅
 Созданы `item_task.xml`, `fragment_task_list.xml`, `TaskListAdapter`, `TaskListFragment`. Синхронизация с MockAPI без дубликатов (upsert по `remoteId`).
+
+### Этап 8. Навигация ✅
+Созданы `nav_graph.xml`, `TaskDetailsFragment` + ViewModel, `TaskEditFragment` + ViewModel. Safe Args плагин. Toolbar с навигацией. Переходы: список → детали → редактирование → создание.
 
 ---
 
