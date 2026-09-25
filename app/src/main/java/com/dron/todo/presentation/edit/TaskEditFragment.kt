@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dron.todo.R
 import com.dron.todo.databinding.FragmentTaskEditBinding
+import com.dron.todo.util.PermissionHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,7 +38,6 @@ class TaskEditFragment : Fragment() {
 
         viewModel.setTaskId(args.taskId)
 
-        // В режиме редактирования — заполняем поля
         viewModel.observeTask()?.observe(viewLifecycleOwner) { task ->
             viewModel.setExistingTask(task)
             fillFields(task)
@@ -76,6 +76,17 @@ class TaskEditFragment : Fragment() {
         if (title.isBlank()) {
             Toast.makeText(requireContext(), "Введите название", Toast.LENGTH_SHORT).show()
             return
+        }
+
+        // Если есть дедлайн и нет разрешения на точные будильники — попросим
+        if (dueDate > 0 && !PermissionHelper.canScheduleExactAlarms(requireContext())) {
+            Toast.makeText(
+                requireContext(),
+                "Разрешите точные напоминания для своевременных уведомлений",
+                Toast.LENGTH_LONG
+            ).show()
+            PermissionHelper.requestExactAlarmPermission(requireContext())
+            // Продолжаем сохранение — будильник поставится неточный
         }
 
         viewModel.save(

@@ -21,7 +21,7 @@
 3. **Просмотр деталей задачи** — переход на отдельный экран.
 4. **Редактирование задачи** — изменение полей и отметка «выполнено».
 5. **Удаление задачи** — свайпом или кнопкой.
-6. **Уведомления** — напоминание за 15 минут до дедлайна.
+6. **Уведомления** — напоминание за 15 минут до дедлайна (точные будильники через `AlarmManager`).
 7. **Тёмная тема** — переключение с сохранением выбора.
 8. **Доп. задача: поиск** — строка поиска на главном экране с debounce в RxJava (заметок может быть очень много).
 
@@ -53,25 +53,24 @@
 - [x] 6. ViewModel + RxJava
 - [x] 7. UI на XML (список задач)
 - [x] 8. Навигация (детали, редактирование)
-- [ ] 9. Уведомления
+- [x] 9. Уведомления
 - [ ] 10. Тёмная тема
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 8 / 12
+**Прогресс:** 9 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 9 — Уведомления**
+**Этап 10 — Тёмная тема**
 
 Планирую:
-- `NotificationHelper` — создание канала, показ уведомлений
-- `AlarmScheduler` — точные будильники через `AlarmManager`
-- `AlarmReceiver` — `BroadcastReceiver` для срабатывания
-- Разрешения `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`
-- Запрос разрешений у пользователя
+- `ThemeManager` — переключение через `AppCompatDelegate`
+- `DataStore` — сохранение выбора пользователя
+- Кнопка в Toolbar (светлая / тёмная / системная)
+- Проверка `values-night/themes.xml`
 
 ---
 
@@ -99,7 +98,10 @@
 Созданы `item_task.xml`, `fragment_task_list.xml`, `TaskListAdapter`, `TaskListFragment`. Синхронизация с MockAPI без дубликатов (upsert по `remoteId`).
 
 ### Этап 8. Навигация ✅
-Созданы `nav_graph.xml`, `TaskDetailsFragment` + ViewModel, `TaskEditFragment` + ViewModel. Safe Args плагин. Toolbar с навигацией. Переходы: список → детали → редактирование → создание.
+Созданы `nav_graph.xml`, `TaskDetailsFragment` + ViewModel, `TaskEditFragment` + ViewModel. Safe Args. Toolbar с навигацией.
+
+### Этап 9. Уведомления ✅
+Созданы `NotificationHelper` (канал + показ), `AlarmReceiver` (`BroadcastReceiver`), `AlarmScheduler` (`AlarmManager` с `setExactAndAllowWhileIdle`), `PermissionHelper`. Запрос разрешений `POST_NOTIFICATIONS` и `SCHEDULE_EXACT_ALARM`. Будильники за 15 минут до дедлайна. **Проверено — уведомления приходят.**
 
 ---
 

@@ -1,5 +1,6 @@
 package com.dron.todo.data.repository
 
+import android.content.Context
 import com.dron.todo.data.local.dao.TaskDao
 import com.dron.todo.data.local.entity.TaskEntity
 import com.dron.todo.data.remote.api.TodoApiService
@@ -7,6 +8,8 @@ import com.dron.todo.data.remote.mapper.toDto
 import com.dron.todo.data.remote.mapper.toEntities
 import com.dron.todo.data.remote.mapper.toEntity
 import com.dron.todo.domain.repository.TaskRepository
+import com.dron.todo.util.AlarmScheduler
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -16,7 +19,8 @@ import javax.inject.Singleton
 @Singleton
 class TaskRepositoryImpl @Inject constructor(
     private val taskDao: TaskDao,
-    private val apiService: TodoApiService
+    private val apiService: TodoApiService,
+    @ApplicationContext private val context: Context
 ) : TaskRepository {
 
     // ---------- Наблюдение (только Room) ----------
@@ -68,19 +72,24 @@ class TaskRepositoryImpl @Inject constructor(
             .subscribeOn(Schedulers.io())
             .flatMapCompletable { localId ->
                 val taskWithId = task.copy(id = localId)
+                AlarmScheduler.schedule(context, taskWithId)   // ← добавь
                 apiService.createTask(taskWithId.toDto())
                     .flatMapCompletable { dto ->
-                        // Обновляем remoteId после ответа сервера
                         taskDao.update(
                             taskWithId.copy(remoteId = dto.id?.toLongOrNull())
                         )
                     }
-                    .onErrorComplete() // если сеть упала — данные уже в Room
+                    .onErrorComplete()
             }
 
     override fun update(task: TaskEntity): Completable =
         taskDao.update(task)
             .subscribeOn(Schedulers.io())
+            .andThen(
+                Completable.fromAction {
+                    AlarmScheduler.schedule(context, task)   // ← добавь
+                }
+            )
             .andThen(
                 task.remoteId?.let { remoteId ->
                     apiService.updateTask(remoteId.toString(), task.toDto())
@@ -92,6 +101,11 @@ class TaskRepositoryImpl @Inject constructor(
     override fun delete(task: TaskEntity): Completable =
         taskDao.delete(task)
             .subscribeOn(Schedulers.io())
+            .andThen(
+                Completable.fromAction {
+                    AlarmScheduler.cancel(context, task.id)   // ← добавь
+                }
+            )
             .andThen(
                 task.remoteId?.let { remoteId ->
                     apiService.deleteTask(remoteId.toString())
@@ -105,6 +119,13 @@ class TaskRepositoryImpl @Inject constructor(
             .andThen(
                 taskDao.getById(id)
                     .flatMapCompletable { task ->
+                        // Если выполнена — отменяем; если снята — планируем заново
+                        if (completed) {
+                            AlarmScheduler.cancel(context, task.id)
+                        } else {
+                            AlarmScheduler.schedule(context, task)
+                        }
+
                         task.remoteId?.let { remoteId ->
                             apiService.updateTask(remoteId.toString(), task.toDto())
                                 .ignoreElement()
