@@ -147,7 +147,8 @@ Todo/
 │               │   └── nav_graph.xml                     — граф навигации
 │               ├── menu/
 │               │   ├── menu_main.xml                     — иконки Toolbar
-│               │   └── menu_theme.xml                    — подменю темы
+│               │   ├── menu_theme.xml                    — подменю темы
+│               │   └── menu_sort.xml                     — подменю сортировки                      — подменю сортировки                    — подменю темы
 │               ├── drawable/
 │               │   ├── ic_add.xml                        — иконка FAB
 │               │   ├── ic_theme.xml                      — иконка темы

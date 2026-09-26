@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dron.todo.databinding.FragmentTaskListBinding
 import dagger.hilt.android.AndroidEntryPoint
+import com.dron.todo.R
 
 @AndroidEntryPoint
 class TaskListFragment : Fragment() {
@@ -39,8 +41,27 @@ class TaskListFragment : Fragment() {
 
         setupRecyclerView()
         setupFab()
-        setupSearch()          // ← добавить
+        setupSearch()
+        setupSortButton()      // ← добавить
         observeTasks()
+    }
+
+    private fun setupSortButton() {
+        binding.sortButton.setOnClickListener {
+            val popup = PopupMenu(requireContext(), binding.sortButton)
+            popup.inflate(R.menu.menu_sort)
+
+            popup.setOnMenuItemClickListener { menuItem ->
+                val mode = when (menuItem.itemId) {
+                    R.id.sort_by_date -> SortMode.BY_DATE
+                    R.id.sort_by_priority -> SortMode.BY_PRIORITY
+                    else -> SortMode.BY_DATE
+                }
+                viewModel.setSortMode(mode)
+                true
+            }
+            popup.show()
+        }
     }
 
     private fun setupSearch() {
