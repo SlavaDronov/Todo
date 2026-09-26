@@ -44,10 +44,14 @@ class TaskListAdapter(
                 binding.descriptionText.text = task.description
             }
 
-            binding.dueDateText.text = if (task.dueDate > 0) {
-                DateTimeUtils.format(task.dueDate)
+            if (task.dueDate > 0) {
+                binding.dueDateText.text = DateTimeUtils.format(task.dueDate)
+                val isOverdue = task.dueDate < System.currentTimeMillis() && !task.completed
+                val color = if (isOverdue) 0xFFF44336.toInt() else 0xFF757575.toInt()
+                binding.dueDateText.setTextColor(color)
             } else {
-                "Без срока"
+                binding.dueDateText.text = "Без срока"
+                binding.dueDateText.setTextColor(0xFF757575.toInt())
             }
 
             // Чекбокс

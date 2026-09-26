@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_theme"
-        android:icon="@android:drawable/ic_menu_day"
+        android:icon="@drawable/ic_theme"
         android:title="Тема"
         app:showAsAction="always" />
 

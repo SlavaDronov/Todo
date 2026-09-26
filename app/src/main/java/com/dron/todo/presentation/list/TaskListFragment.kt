@@ -103,8 +103,17 @@ class TaskListFragment : Fragment() {
         viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
             adapter.submitList(tasks)
 
-            binding.emptyText.visibility = if (tasks.isEmpty()) View.VISIBLE else View.GONE
-            binding.tasksRecyclerView.visibility = if (tasks.isEmpty()) View.GONE else View.VISIBLE
+            val isEmpty = tasks.isEmpty()
+            val isSearching = binding.searchInput.text?.isNotBlank() == true
+
+            binding.emptyText.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.tasksRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
+
+            binding.emptyText.text = if (isSearching) {
+                "Ничего не найдено"
+            } else {
+                "Нет задач. Добавьте первую!"
+            }
         }
     }
 
