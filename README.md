@@ -12,11 +12,15 @@ Android-приложение для создания, редактировани
 
 | Главный экран | Тёмная тема |
 |---------------|-------------|
-| ![Главный экран](screenshots/screenshot_list.png) | ![Тёмная тема](screenshots/screenshot_dark.png) |
+| ![Главный экран](screenshots/screenshot_list.jpg) | ![Тёмная тема](screenshots/screenshot_dark.jpg) |
 
-| Детали задачи | Редактирование |
-|---------------|----------------|
-| ![Детали](screenshots/screenshot_details.png) | ![Редактирование](screenshots/screenshot_edit.png) |
+| Детали задачи | Редактирование (форма) |
+|---------------|------------------------|
+| ![Детали](screenshots/screenshot_details.jpg) | ![Форма](screenshots/screenshot_edit.jpg) |
+
+| Редактирование (календарь) |
+|----------------------------|
+| ![Календарь](screenshots/screenshot_edit2.jpg) |
 
 ---
 
