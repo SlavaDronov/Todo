@@ -23,7 +23,7 @@
 5. **Удаление задачи** — свайпом или кнопкой.
 6. **Уведомления** — напоминание за 15 минут до дедлайна (точные будильники через `AlarmManager`).
 7. **Тёмная тема** — переключение светлая / тёмная / системная с сохранением выбора через `DataStore`.
-8. **Доп. задача: поиск** — строка поиска на главном экране с debounce в RxJava (заметок может быть очень много).
+8. **Поиск с debounce** — строка поиска на главном экране, фильтрация по названию и описанию, `debounce` 300 мс через RxJava.
 
 ---
 
@@ -39,6 +39,7 @@
 - **Уведомления:** NotificationManager, AlarmManager (точные будильники), `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`
 - **Тема:** `AppCompatDelegate` + `values-night` + `DataStore`
 - **Дата и время:** `MaterialDatePicker` + `MaterialTimePicker`, формат `dd.MM.yyyy HH:mm`
+- **Поиск:** `BehaviorSubject` + `debounce` + `switchMap` + SQL `LIKE`
 
 **Бэкенд:** mock-сервер на [MockAPI.io](https://mockapi.io).
 
@@ -56,22 +57,23 @@
 - [x] 8. Навигация (детали, редактирование)
 - [x] 9. Уведомления
 - [x] 10. Тёмная тема
-- [ ] 11. Поиск с debounce
+- [x] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 10 / 12
+**Прогресс:** 11 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 11 — Поиск с debounce**
+**Этап 12 — Документация и полировка**
 
 Планирую:
-- Строка поиска над списком задач
-- `PublishSubject<String>` для ввода
-- `debounce(300ms)` + `distinctUntilChanged()` + `switchMap`
-- SQL `LIKE` через существующий `TaskDao.search()`
+- Проверка всех экранов на баги
+- Улучшение UX (мелочи)
+- Финальная документация
+- Скриншоты
+- Финальный коммит
 
 ---
 
@@ -106,6 +108,9 @@
 
 ### Этап 10. Тёмная тема ✅
 `ThemePreferences` (DataStore), `ThemeManager` (`AppCompatDelegate`), PopupMenu в Toolbar с тремя режимами (светлая / тёмная / системная). Выбор сохраняется между запусками. Дата в читаемом формате (`dd.MM.yyyy HH:mm`) на всех экранах.
+
+### Этап 11. Поиск с debounce ✅
+Строка поиска над списком задач. `BehaviorSubject<String>` + `debounce(300ms)` + `distinctUntilChanged()` + `switchMap`. SQL `LIKE` по названию и описанию через `TaskDao.search()`. Пустой запрос → все задачи.
 
 ---
 

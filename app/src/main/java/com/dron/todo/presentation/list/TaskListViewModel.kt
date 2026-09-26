@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,12 +23,24 @@ class TaskListViewModel @Inject constructor(
 
     private val sortMode = BehaviorSubject.createDefault(SortMode.BY_DATE)
 
-    val tasks: LiveData<List<TaskEntity>> = sortMode
+    /** Поток поисковых запросов (с начальным пустым значением) */
+    private val searchQuery = BehaviorSubject.createDefault("")
+
+    val tasks: LiveData<List<TaskEntity>> = searchQuery
+        .debounce(300, TimeUnit.MILLISECONDS)
+        .distinctUntilChanged()
         .toFlowable(BackpressureStrategy.LATEST)
-        .switchMap { mode ->
-            when (mode) {
-                SortMode.BY_DATE -> repository.observeAllSortedByCreatedAt()
-                SortMode.BY_PRIORITY -> repository.observeAllSortedByPriority()
+        .switchMap { query ->
+            if (query.isBlank()) {
+                sortMode.toFlowable(BackpressureStrategy.LATEST)
+                    .switchMap { mode ->
+                        when (mode) {
+                            SortMode.BY_DATE -> repository.observeAllSortedByCreatedAt()
+                            SortMode.BY_PRIORITY -> repository.observeAllSortedByPriority()
+                        }
+                    }
+            } else {
+                repository.search(query)
             }
         }
         .toLiveData()
@@ -51,6 +64,10 @@ class TaskListViewModel @Inject constructor(
         if (sortMode.value != mode) {
             sortMode.onNext(mode)
         }
+    }
+
+    fun search(query: String) {
+        searchQuery.onNext(query)
     }
 
     fun delete(task: TaskEntity) {
