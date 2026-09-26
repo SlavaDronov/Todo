@@ -22,7 +22,7 @@
 4. **Редактирование задачи** — изменение полей и отметка «выполнено».
 5. **Удаление задачи** — свайпом или кнопкой.
 6. **Уведомления** — напоминание за 15 минут до дедлайна (точные будильники через `AlarmManager`).
-7. **Тёмная тема** — переключение с сохранением выбора.
+7. **Тёмная тема** — переключение светлая / тёмная / системная с сохранением выбора через `DataStore`.
 8. **Доп. задача: поиск** — строка поиска на главном экране с debounce в RxJava (заметок может быть очень много).
 
 ---
@@ -37,7 +37,7 @@
 - **Асинхронность:** RxJava 3 + RxAndroid
 - **DI:** Hilt
 - **Уведомления:** NotificationManager, AlarmManager (точные будильники), `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`
-- **Тема:** `AppCompatDelegate` + `values-night` + DataStore
+- **Тема:** `AppCompatDelegate` + `values-night` + `DataStore`
 - **Дата и время:** `MaterialDatePicker` + `MaterialTimePicker`, формат `dd.MM.yyyy HH:mm`
 
 **Бэкенд:** mock-сервер на [MockAPI.io](https://mockapi.io).
@@ -55,23 +55,23 @@
 - [x] 7. UI на XML (список задач)
 - [x] 8. Навигация (детали, редактирование)
 - [x] 9. Уведомления
-- [ ] 10. Тёмная тема
+- [x] 10. Тёмная тема
 - [ ] 11. Поиск с debounce
 - [ ] 12. Документация и полировка
 
-**Прогресс:** 9 / 12
+**Прогресс:** 10 / 12
 
 ---
 
 ## 🚧 Текущий этап
 
-**Этап 10 — Тёмная тема**
+**Этап 11 — Поиск с debounce**
 
 Планирую:
-- `ThemePreferences` (DataStore) — сохранение выбора
-- `ThemeManager` — переключение через `AppCompatDelegate`
-- Кнопка в Toolbar (светлая / тёмная / системная)
-- Проверка `values-night/themes.xml`
+- Строка поиска над списком задач
+- `PublishSubject<String>` для ввода
+- `debounce(300ms)` + `distinctUntilChanged()` + `switchMap`
+- SQL `LIKE` через существующий `TaskDao.search()`
 
 ---
 
@@ -102,14 +102,10 @@
 Созданы `nav_graph.xml`, `TaskDetailsFragment` + ViewModel, `TaskEditFragment` + ViewModel. Safe Args. Toolbar с навигацией.
 
 ### Этап 9. Уведомления ✅
-- `NotificationHelper` — канал + показ уведомлений
-- `AlarmReceiver` — `BroadcastReceiver` для срабатывания
-- `AlarmScheduler` — `AlarmManager` с `setExactAndAllowWhileIdle` (за 15 минут до дедлайна)
-- `PermissionHelper` — запрос `SCHEDULE_EXACT_ALARM`
-- Разрешения `POST_NOTIFICATIONS` (Android 13+) и `SCHEDULE_EXACT_ALARM` (Android 12+)
-- `DateTimeUtils` + `MaterialDatePicker` + `MaterialTimePicker` — удобный ввод даты и времени
+`NotificationHelper`, `AlarmReceiver`, `AlarmScheduler` (`setExactAndAllowWhileIdle`), `PermissionHelper`. Разрешения `POST_NOTIFICATIONS` и `SCHEDULE_EXACT_ALARM`. Уведомления за 15 минут до дедлайна. `MaterialDatePicker` + `MaterialTimePicker`.
 
-**Проверено:** уведомления приходят за 15 минут до дедлайна.
+### Этап 10. Тёмная тема ✅
+`ThemePreferences` (DataStore), `ThemeManager` (`AppCompatDelegate`), PopupMenu в Toolbar с тремя режимами (светлая / тёмная / системная). Выбор сохраняется между запусками. Дата в читаемом формате (`dd.MM.yyyy HH:mm`) на всех экранах.
 
 ---
 

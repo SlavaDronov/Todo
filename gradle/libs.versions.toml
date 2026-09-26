@@ -18,6 +18,7 @@ hilt = "2.59"
 navigation = "2.9.7"
 gson = "2.11.0"
 lifecycle = "2.8.7"
+datastore = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,8 @@ androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-
 # Gson
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidx-lifecycle-reactivestreams-ktx = { group = "androidx.lifecycle", name = "lifecycle-reactivestreams-ktx", version.ref = "lifecycle" }
+
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

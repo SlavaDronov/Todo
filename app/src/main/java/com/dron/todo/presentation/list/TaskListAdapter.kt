@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dron.todo.R
 import com.dron.todo.data.local.entity.TaskEntity
 import com.dron.todo.databinding.ItemTaskBinding
+import com.dron.todo.util.DateTimeUtils
 
 class TaskListAdapter(
     private val onTaskClick: (TaskEntity) -> Unit,
@@ -43,8 +44,11 @@ class TaskListAdapter(
                 binding.descriptionText.text = task.description
             }
 
-            // Дата — пока формат timestamp (потом заменим на нормальный формат)
-            binding.dueDateText.text = task.dueDate.toString()
+            binding.dueDateText.text = if (task.dueDate > 0) {
+                DateTimeUtils.format(task.dueDate)
+            } else {
+                "Без срока"
+            }
 
             // Чекбокс
             binding.completedCheckbox.setOnCheckedChangeListener(null)

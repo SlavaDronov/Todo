@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dron.todo.R
 import com.dron.todo.databinding.FragmentTaskDetailsBinding
+import com.dron.todo.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -56,7 +57,11 @@ class TaskDetailsFragment : Fragment() {
                 2 -> "Высокий"
                 else -> "Неизвестно"
             }
-            binding.dueDateText.text = task.dueDate.toString()
+            binding.dueDateText.text = if (task.dueDate > 0) {
+                DateTimeUtils.format(task.dueDate)
+            } else {
+                "Не задано"
+            }
             binding.statusText.text = if (task.completed) "Выполнена" else "Не выполнена"
         }
     }

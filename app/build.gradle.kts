@@ -70,6 +70,8 @@ dependencies {
     // Gson
     implementation(libs.gson)
 
+    implementation(libs.androidx.datastore.preferences)
+
     implementation(libs.androidx.lifecycle.reactivestreams.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

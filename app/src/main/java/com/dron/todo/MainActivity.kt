@@ -1,29 +1,41 @@
 package com.dron.todo
 
 import android.Manifest
-import android.app.AlarmManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.dron.todo.data.local.ThemeMode
+import com.dron.todo.data.local.ThemePreferences
 import com.dron.todo.databinding.ActivityMainBinding
+import com.dron.todo.util.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var themePreferences: ThemePreferences
 
     private val requestNotificationPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -37,6 +49,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Применяем сохранённую тему ДО setContentView
+        lifecycleScope.launch {
+            val savedMode = themePreferences.themeMode.first()
+            ThemeManager.applyTheme(savedMode)
+        }
+
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -66,15 +85,42 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        // Запрос POST_NOTIFICATIONS (Android 13+)
         askNotificationPermission()
+    }
 
-        // ВРЕМЕННО — для проверки
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = getSystemService(AlarmManager::class.java)
-            Log.d("PermissionCheck", "canScheduleExactAlarms = ${alarmManager.canScheduleExactAlarms()}")
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_theme -> {
+                showThemeMenu()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        Log.d("PermissionCheck", "POST_NOTIFICATIONS = ${ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED}")
+    }
+
+    private fun showThemeMenu() {
+        val popup = PopupMenu(this, findViewById(R.id.action_theme))
+        popup.inflate(R.menu.menu_theme)
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            val mode = when (menuItem.itemId) {
+                R.id.theme_light -> ThemeMode.LIGHT
+                R.id.theme_dark -> ThemeMode.DARK
+                else -> ThemeMode.SYSTEM
+            }
+
+            lifecycleScope.launch {
+                themePreferences.setThemeMode(mode)
+                ThemeManager.applyTheme(mode)
+            }
+            true
+        }
+        popup.show()
     }
 
     private fun askNotificationPermission() {
